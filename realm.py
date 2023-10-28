@@ -2,15 +2,22 @@ import requests
 import re
 import time
 import logging
+import os
 
 # 配置日志
 logging.basicConfig(filename="crawler.log", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # 定义初始 number 和 URL
-number = 5058
+number = 5127
 base_url = "https://ep.atomicals.xyz/proxy/blockchain.atomicals.get?params=[{}]&pretty"
 
-# 无限循环
+# 保存文件的目标目录
+target_directory = os.path.expanduser("~/atom/ok")
+
+# 创建目标目录（如果不存在）
+os.makedirs(target_directory, exist_ok=True)
+
+# 无限循循环
 while True:
     url = base_url.format(number)
 
@@ -27,7 +34,7 @@ while True:
                 print("提取到的数据为:", request_realm)
 
                 # 将数据写入文件
-                with open("realmbase.txt", "a") as file:
+                with open(os.path.join(target_directory, "realmbase.txt"), "a") as file:
                     file.write(request_realm + "\n")
 
                 # 重置重试计数
@@ -46,7 +53,7 @@ while True:
                 logging.error("请求失败，状态码: %d", response.status_code)
 
     except requests.exceptions.RequestException as e:
-        print("请求异常:", str(e)
+        print("请求异常:", str(e))
         # 记录异常信息
         logging.error("请求异常: %s", str(e))
 
